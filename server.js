@@ -47,6 +47,7 @@ client.on("messageCreate", async (message) => {
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isButton()) return;
 
+  const userId = interaction.user.id; // ★絶対に変わらない固有ID
   const userName = interaction.member?.displayName || interaction.user.username;
   const jstNow = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
 
@@ -55,10 +56,10 @@ client.on("interactionCreate", async (interaction) => {
 
   if (interaction.customId === "btn_wake") {
     actionName = "起床報告";
-    replyMessage = `☀️ <@${interaction.user.id}> さん、おはよう！起床を記録しました。`;
+    replyMessage = `☀️ <@${userId}> さん、おはよう！起床を記録しました。`;
   } else if (interaction.customId === "btn_meal") {
     actionName = "朝ごはん完了";
-    replyMessage = `🍳 <@${interaction.user.id}> さん、朝ごはんナイス！記録しました。`;
+    replyMessage = `🍳 <@${userId}> さん、朝ごはんナイス！記録しました。`;
   }
 
   // Discordに返信
@@ -72,6 +73,7 @@ client.on("interactionCreate", async (interaction) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           timestamp: jstNow,
+          userId: userId,     // ★IDを追加送信
           userName: userName,
           action: actionName
         })
